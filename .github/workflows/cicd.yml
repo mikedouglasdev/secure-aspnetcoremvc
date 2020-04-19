@@ -5,8 +5,8 @@ on:
     branches: [ master ]
 
 env:
-  AZURE_WEBAPP_NAME: ghusers  # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '/home/runner/work/finance-app/finance-app/FinanceSolution/FinanceApp/bin/Debug/netcoreapp3.1/publish/'    # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_NAME: secureaspnetcoremvc  # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: 'secure-aspnetcoremvc/secureaspnetcoremvc/bin/Debug/netcoreapp3.1/publish/'    # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '3.1.101'              # set this to the dotnet version to use
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -32,3 +32,18 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Publish
       run: dotnet publish
+    
+    # Login to Azure using Service Principal
+    - name: Azure Login  
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_AUTH }}     
+    
+    - name: Azure WebApp
+      uses: Azure/webapps-deploy@v2
+      with:
+        # Name of the Azure Web App
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    
