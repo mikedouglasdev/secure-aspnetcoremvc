@@ -46,4 +46,17 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    
+     
+    - name: OWASP ZAP Baseline Scan
+      uses: zaproxy/action-baseline@v0.2.0
+      with:
+        # GitHub Token to create issues in the repository
+        token: ${{ secrets.ISSUES_TOKEN }}
+        # Target URL
+        target: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/
+        # Relative path of the ZAP configuration file
+        # rules_file_name: # optional
+        # The Docker file to be executed
+        # docker_name: # default is owasp/zap2docker-stable
+        # Additional command line options
+        # cmd_options: # optional   
