@@ -1,0 +1,62 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  AZURE_WEBAPP_NAME: secureaspnetcoremvc  # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '/home/runner/work/secure-aspnetcoremvc/secure-aspnetcoremvc/secureaspnetcoremvc/bin/Debug/netcoreapp3.1/publish/'    # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '3.1.101'              # set this to the dotnet version to use
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    # Runs a single command using the runners shell
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: Publish
+      run: dotnet publish
+    
+    # Login to Azure using Service Principal
+    - name: Azure Login  
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_AUTH }}     
+    
+    - name: Azure WebApp
+      uses: Azure/webapps-deploy@v2
+      with:
+        # Name of the Azure Web App
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+     
+    - name: OWASP ZAP Baseline Scan
+      uses: zaproxy/action-baseline@v0.2.0
+      with:
+        # GitHub Token to create issues in the repository
+        token: ${{ secrets.ISSUES_TOKEN }}
+        # Target URL
+        target: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/
+        # Relative path of the ZAP configuration file
+        # rules_file_name: # optional
+        # The Docker file to be executed
+        # docker_name: # default is owasp/zap2docker-stable
+        # Additional command line options
+        # cmd_options: # optional   
