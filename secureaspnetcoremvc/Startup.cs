@@ -57,7 +57,7 @@ namespace secureaspnetcoremvc
 
             app.Use((context, next) =>
             {
-                context.Response.Headers["Cache-Control"] = "no-cache=Set-Cookie, Set-Cookie2";
+                context.Response.Headers["Cache-Control"] = "no-cache=\"Set-Cookie, Set-Cookie2\"";
                 context.Response.Headers["Pragma"] = "no-cache";
                 return next.Invoke();
             });
