@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +40,9 @@ namespace secureaspnetcoremvc
                         NoStore = true,
                         Duration = 0
                     });
+
+
+                
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
@@ -56,12 +60,21 @@ namespace secureaspnetcoremvc
                 app.UseHsts();
             }
 
-            //app.Use((context, next) =>
-            //{
-            //    context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-            //    context.Response.Headers["Pragma"] = "no-cache";
-            //    return next.Invoke();
-            //});
+            app.Use((context, next) =>
+            {
+                context.Response.GetTypedHeaders().CacheControl =
+                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                    {
+                        MustRevalidate = true,
+                        NoCache = true,
+                        NoStore = true,
+                        
+                    };
+
+                //context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                //context.Response.Headers["Pragma"] = "no-cache";
+                return next.Invoke();
+            });
 
 
             app.UseHttpsRedirection();
