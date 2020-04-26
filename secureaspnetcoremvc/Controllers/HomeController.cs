@@ -9,7 +9,7 @@ using secureaspnetcoremvc.Models;
 
 namespace secureaspnetcoremvc.Controllers
 {
-    //[ResponseCache(CacheProfileName = "NoCache")]
+    [ResponseCache(CacheProfileName = "NoStore")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

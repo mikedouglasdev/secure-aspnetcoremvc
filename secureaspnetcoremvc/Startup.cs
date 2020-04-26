@@ -32,10 +32,11 @@ namespace secureaspnetcoremvc
                     {
                         Duration = 30
                     });
-                options.CacheProfiles.Add("NoCache",
+                options.CacheProfiles.Add("NoStore",
                     new CacheProfile()
                     {
                         Location = ResponseCacheLocation.None,
+                        NoStore = true,
                         Duration = 0
                     });
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
@@ -55,12 +56,12 @@ namespace secureaspnetcoremvc
                 app.UseHsts();
             }
 
-            app.Use((context, next) =>
-            {
-                context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-                context.Response.Headers["Pragma"] = "no-cache";
-                return next.Invoke();
-            });
+            //app.Use((context, next) =>
+            //{
+            //    context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            //    context.Response.Headers["Pragma"] = "no-cache";
+            //    return next.Invoke();
+            //});
 
 
             app.UseHttpsRedirection();
