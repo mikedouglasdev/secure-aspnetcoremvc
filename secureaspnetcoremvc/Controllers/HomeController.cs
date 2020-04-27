@@ -9,7 +9,7 @@ using secureaspnetcoremvc.Models;
 
 namespace secureaspnetcoremvc.Controllers
 {
-   // [ResponseCache(CacheProfileName = "NoStore")]
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -19,6 +19,7 @@ namespace secureaspnetcoremvc.Controllers
             _logger = logger;
         }
 
+        [ResponseCache(CacheProfileName = "Default30")]
         public IActionResult Index()
         {
             return View();

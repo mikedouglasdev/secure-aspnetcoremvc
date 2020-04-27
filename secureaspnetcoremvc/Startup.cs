@@ -33,17 +33,16 @@ namespace secureaspnetcoremvc
                     {
                         Duration = 30
                     });
-                options.CacheProfiles.Add("NoStore",
+                options.CacheProfiles.Add("NoCache",
                     new CacheProfile()
                     {
                         Location = ResponseCacheLocation.None,
-                        NoStore = true,
                         Duration = 0
                     });
-
-
                 
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+           // services.AddResponseCaching();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +58,8 @@ namespace secureaspnetcoremvc
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+          //  app.UseResponseCaching();
 
             app.Use((context, next) =>
             {
@@ -71,7 +72,7 @@ namespace secureaspnetcoremvc
                         
                     };
 
-                //context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                context.Response.Headers["X-Content-Security-Policy"] = "default-src \'self\';";
                 //context.Response.Headers["Pragma"] = "no-cache";
                 return next.Invoke();
             });
