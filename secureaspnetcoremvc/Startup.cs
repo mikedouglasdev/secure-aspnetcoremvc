@@ -72,10 +72,9 @@ namespace secureaspnetcoremvc
                         
                     };
 
-                //context.Response.Headers["X-Content-Security-Policy"] = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';base-uri 'self';form-action 'self';frame-ancestors 'none';";
-                context.Response.Headers["Content-Security-Policy"] = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';base-uri 'self';form-action 'self';frame-ancestors 'none';";
-                //context.Response.Headers["X-WebKit-CSP"] = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';base-uri 'self';form-action 'self';frame-ancestors 'none';";
-                //context.Response.Headers["Pragma"] = "no-cache";
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Add("Content-Security-Policy", "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';base-uri 'self';form-action 'self';frame-ancestors 'none';");
+
                 return next.Invoke();
             });
 
