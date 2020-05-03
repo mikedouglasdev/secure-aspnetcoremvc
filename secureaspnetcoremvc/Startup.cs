@@ -25,7 +25,6 @@ namespace secureaspnetcoremvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddControllersWithViews();
             services.AddMvc(options =>
             {
                 options.CacheProfiles.Add("Default30",
@@ -71,14 +70,14 @@ namespace secureaspnetcoremvc
                         NoStore = true,
                         
                     };
-
+                
                 context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
                 context.Response.Headers.Add("Content-Security-Policy", "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';base-uri 'self';form-action 'self';frame-ancestors 'none';");
+                context.Response.Headers.Remove("Server");
 
                 return next.Invoke();
             });
-
-
+           
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
