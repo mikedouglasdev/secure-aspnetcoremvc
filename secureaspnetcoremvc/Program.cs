@@ -20,7 +20,12 @@ namespace secureaspnetcoremvc
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        // Set properties and call methods on options
+                        serverOptions.AddServerHeader = false;
+                    })
+                    .UseStartup<Startup>();
                 });
     }
 }
