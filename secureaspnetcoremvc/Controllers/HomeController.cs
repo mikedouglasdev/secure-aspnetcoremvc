@@ -19,7 +19,6 @@ namespace secureaspnetcoremvc.Controllers
             _logger = logger;
         }
 
-        [ResponseCache(CacheProfileName = "Default30")]
         public IActionResult Index()
         {
             return View();
